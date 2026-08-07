@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itachi Genjutsu System ULTIMATE PRO - Amaterasu Edition</title>
+
+<style>
+/* ================= RESET & BASE ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    background-color: #05050a;
+    background-image: url("https://img-03.pconline.com.cn/pconline/2009/16/13768804_13768804_itachi_and_tanjiro_and_nezuko_2__1__thumb.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: bgMove 20s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.08) rotate(1deg); }
+}
+
+/* CYBER OVERLAY GRID */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255, 0, 51, 0.15), rgba(5, 5, 10, 0.92)),
+        linear-gradient(rgba(255, 0, 51, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 51, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 30px 30px, 30px 30px;
+    z-index: 0;
+}
+
+/* ================= COPYRIGHT FOOTER ================= */
+.copyright-footer {
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+    z-index: 99;
+    text-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ================= PARTICLE SYSTEM ================= */
+#particle-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #ff2a55;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #ff0033, 0 0 20px #ff7700;
+    animation: float 5s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(105vh) scale(0.8); opacity: 0; }
+    50% { opacity: 1; }
+    to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+
+/* ================= SHARINGAN & SWORD SLASH EFFECTS ================= */
+#sharingan-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 260px;
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    filter: drop-shadow(0 0 35px #ff0033) drop-shadow(0 0 70px #ff0000);
+}
+
+#sharingan-overlay.active-sharingan {
+    transform: translate(-50%, -50%) scale(1.1) rotate(720deg);
+    opacity: 1;
+}
+
+/* SWORD SLASH CONTAINER */
+#sword-slash-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sword-slash {
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    width: 140%;
+    height: 6px;
+    background: linear-gradient(90deg, transparent, #ffffff, #ff0033, #ff7700, transparent);
+    box-shadow: 0 0 20px #ff0033, 0 0 40px #ff7700, 0 0 60px #ffffff;
+    transform: translateY(-50%) rotate(-25deg) scaleX(0);
+    transform-origin: left center;
+    opacity: 0;
+}
+
+.sword-slash.animate-slash {
+    animation: slashSlash 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes slashSlash {
+    0% { transform: translateY(-50%) rotate(-25deg) scaleX(0); opacity: 1; }
+    50% { transform: translateY(-50%) rotate(-25deg) scaleX(1); opacity: 1; }
+    100% { transform: translateY(-50%) rotate(-25deg) scaleX(1); opacity: 0; }
+}
+
+/* ================= AMATERASU FLAME CONTAINER ================= */
+.amaterasu-container {
+    position: relative;
+    z-index: 10;
+    width: 92%;
+    max-width: 480px;
+    padding: 6px;
+    border-radius: 42px 12px 42px 12px;
+    background: #000;
+}
+
+.amaterasu-container::before,
+.amaterasu-container::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 46px 16px 46px 16px;
+    background: linear-gradient(
+        45deg,
+        #000000,
+        #2b0008,
+        #ff0033,
+        #000000,
+        #4a0011,
+        #990022,
+        #000000
+    );
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: amaterasuBurn 3s ease infinite;
+    box-shadow: 
+        0 0 20px #000,
+        0 0 35px rgba(255, 0, 51, 0.6),
+        0 0 65px rgba(100, 0, 20, 0.8),
+        inset 0 0 15px #000;
+}
+
+.amaterasu-container::after {
+    filter: blur(14px);
+    opacity: 0.85;
+    animation: amaterasuBurn 2.5s ease-in-out infinite reverse;
+}
+
+@keyframes amaterasuBurn {
+    0% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 20px #000, 0 0 35px rgba(255, 0, 51, 0.6), 0 0 65px rgba(0, 0, 0, 0.9);
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 30px #ff0033, 0 0 50px rgba(150, 0, 30, 0.8), 0 0 90px rgba(0, 0, 0, 1);
+    }
+    100% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 20px #000, 0 0 35px rgba(255, 0, 51, 0.6), 0 0 65px rgba(0, 0, 0, 0.9);
+    }
+}
+
+.card {
+    width: 100%;
+    padding: 35px 25px;
+    border-radius: 37px 7px 37px 7px;
+    background: rgba(8, 8, 14, 0.92);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 0, 51, 0.2);
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 0, 51, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* HEADER BADGE */
+.badge-tag {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    background: rgba(255, 0, 51, 0.15);
+    border: 1px solid rgba(255, 0, 51, 0.5);
+    color: #ff4d6d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(255, 0, 51, 0.2);
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(180deg, #ffffff 30%, #ff2a55 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 25px;
+    text-shadow: 0 5px 15px rgba(255, 0, 51, 0.4);
+}
+
+/* PREMIUM INPUT GROUP */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(18, 18, 30, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 4px 6px 4px 16px;
+    transition: all 0.3s ease;
+}
+
+.input-box:focus-within {
+    border-color: #ff0033;
+    box-shadow: 0 0 20px rgba(255, 0, 51, 0.35), inset 0 0 10px rgba(255, 0, 51, 0.1);
+    background: rgba(25, 15, 28, 0.9);
+}
+
+input {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-copy {
+    background: linear-gradient(135deg, rgba(255,0,51,0.8), rgba(200,0,40,0.9));
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 0, 51, 0.3);
+}
+
+.btn-copy:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(255, 0, 51, 0.6);
+    background: #ff0033;
+}
+
+/* MAIN GENERATE BUTTON */
+.btn-main {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(90deg, #ff0033, #ff5500, #ff0033);
+    background-size: 200% auto;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(255, 0, 51, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-main:hover {
+    background-position: right center;
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 15px 40px rgba(255, 0, 51, 0.7);
+}
+
+/* LOG DISPLAY BOX */
+.log-box {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 0, 51, 0.25);
+    background: rgba(5, 5, 12, 0.6);
+    text-align: left;
+    position: relative;
+}
+
+#log-text {
+    font-size: 12px;
+    white-space: pre-wrap;
+    color: #e0e0e0;
+    line-height: 1.6;
+    font-family: 'Consolas', monospace;
+    text-shadow: 0 0 8px rgba(255, 0, 51, 0.3);
+}
+
+.btn-copy-all {
+    margin-top: 14px;
+    background: rgba(255, 0, 51, 0.15);
+    border: 1px solid rgba(255, 0, 51, 0.4);
+    color: #ff4d6d;
+    box-shadow: none;
+}
+
+.btn-copy-all:hover {
+    background: #ff0033;
+    color: #fff;
+}
+
+/* CROW SYSTEM */
+#crow-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.crow {
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 10px rgba(255,0,51,0.5));
+}
+
+.crow svg path {
+    fill: #08080c;
+    animation: wingFlap 0.3s infinite alternate;
+    transform-origin: center;
+}
+
+@keyframes wingFlap {
+    from { transform: scaleY(1); }
+    to { transform: scaleY(0.55); }
+}
+
+@keyframes flyAcross {
+    from { transform: translate3d(-150px, 0, 0); }
+    to { transform: translate3d(calc(100vw + 150px), 20px, 0); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="particle-container"></div>
+<div id="crow-container"></div>
+<div id="sword-slash-container"><div id="sword-slash" class="sword-slash"></div></div>
+
+<!-- SHARINGAN EYE VECTOR OVERLAY -->
+<svg id="sharingan-overlay" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="90" fill="#ff0033" stroke="#000" stroke-width="6"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#000" stroke-width="3" opacity="0.6"/>
+    <circle cx="100" cy="100" r="22" fill="#000"/>
+    <g fill="#000">
+        <path d="M100 20 C115 50 115 80 100 100 C85 80 85 50 100 20 Z" transform="rotate(0 100 100)"/>
+        <path d="M100 20 C115 50 115 80 100 100 C85 80 85 50 100 20 Z" transform="rotate(120 100 100)"/>
+        <path d="M100 20 C115 50 115 80 100 100 C85 80 85 50 100 20 Z" transform="rotate(240 100 100)"/>
+    </g>
+</svg>
+
+<!-- AMATERASU FLAME CONTAINER -->
+<div class="amaterasu-container">
+    <div class="card">
+        <div class="badge-tag">Mangekyou System</div>
+        <div class="header-title">ITACHI GENJUTSU</div>
+
+        <div class="input-container">
+            <div class="input-box">
+                <input id="id-input" placeholder="MASUKKAN USER ID" autocomplete="off">
+                <button class="btn-copy" onclick="copyAction('id-input')">SALIN</button>
+            </div>
+
+            <div class="input-box">
+                <input id="pass-output" readonly placeholder="PASSWORD GENERATED">
+                <button class="btn-copy" onclick="copyAction('pass-output')">SALIN</button>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="kantongAjaib()">GENERATE PASSWORD</button>
+
+        <div class="log-box">
+            <pre id="log-text">loading...</pre>
+            <button id="btn-copy-all" class="btn-main btn-copy-all" onclick="copyAll()">
+                SALIN SEMUA DATA
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- COPYRIGHT TEXT FOOTER -->
+<div class="copyright-footer">© Hak Cipta Rifaldo NSt</div>
+
+<script>
+const idInput = document.getElementById('id-input');
+const passOutput = document.getElementById('pass-output');
+const logText = document.getElementById('log-text');
+const sharinganOverlay = document.getElementById('sharingan-overlay');
+const swordSlash = document.getElementById('sword-slash');
+const crowContainer = document.getElementById('crow-container');
+const particleContainer = document.getElementById('particle-container');
+
+/* PARTICLE SYSTEM */
+function createParticles() {
+    const fragment = document.createDocumentFragment();
+    for(let i = 0; i < 25; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.left = (Math.random() * 100) + "vw";
+        p.style.animationDuration = (4 + Math.random() * 4) + "s";
+        p.style.animationDelay = (Math.random() * 2) + "s";
+        fragment.appendChild(p);
+    }
+    particleContainer.appendChild(fragment);
+}
+
+/* LOG UPDATE */
+function updateLog() {
+    const pass = passOutput.value || "........";
+    const id = idInput.value.trim() || "tidak ada";
+
+    logText.innerText = `user id : ${id}
+pass : ${pass}
+
+Silahkan di coba untuk login ya bosku
+note : ubah kata sandi sesuai keinginan silahkan cek pada menu ubah password`;
+}
+
+/* GENERATE PASS */
+function generate() {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let pass = "";
+    const arr = new Uint32Array(8);
+    crypto.getRandomValues(arr);
+    for(let i = 0; i < 8; i++) pass += chars[arr[i] % chars.length];
+    passOutput.value = pass;
+    updateLog();
+}
+
+/* TRIGGER EFEK SHARINGAN & TEBASAN PEDANG */
+function triggerGenjutsuEffects() {
+    sharinganOverlay.classList.remove("active-sharingan");
+    void sharinganOverlay.offsetWidth;
+    sharinganOverlay.classList.add("active-sharingan");
+
+    swordSlash.classList.remove("animate-slash");
+    void swordSlash.offsetWidth;
+    swordSlash.classList.add("animate-slash");
+
+    for(let i = 0; i < 10; i++) {
+        setTimeout(() => createCrow(), i * 60);
+    }
+
+    setTimeout(() => {
+        sharinganOverlay.classList.remove("active-sharingan");
+    }, 1200);
+}
+
+function kantongAjaib() {
+    generate();
+    triggerGenjutsuEffects();
+}
+
+/* CLIPBOARD COPY WITH EFFECTS */
+function copyAction(id) {
+    const el = document.getElementById(id);
+    if(el && el.value) {
+        navigator.clipboard.writeText(el.value);
+        triggerGenjutsuEffects();
+    }
+}
+
+function copyAll() {
+    const text = logText.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById("btn-copy-all");
+        const oldText = btn.innerText;
+
+        btn.innerText = "✓ DATA TERSALIN";
+        triggerGenjutsuEffects();
+
+        setTimeout(() => btn.innerText = oldText, 2000);
+    }).catch(() => {
+        alert("Gagal menyalin data");
+    });
+}
+
+/* CROW SYSTEM */
+function createCrow() {
+    const crow = document.createElement("div");
+    crow.className = "crow";
+    crow.innerHTML = `<svg viewBox="0 0 120 80"><path d="M10 40 Q30 5 60 35 Q90 5 110 40 Q90 25 60 55 Q30 25 10 40Z"/></svg>`;
+
+    const topPos = Math.random() * 75;
+    const duration = 6 + Math.random() * 4;
+
+    crow.style.top = topPos + "vh";
+    crow.style.animation = `flyAcross ${duration}s linear forwards`;
+
+    crowContainer.appendChild(crow);
+    setTimeout(() => crow.remove(), duration * 1000);
+}
+
+function startCrowSystem() {
+    setInterval(() => createCrow(), 2200);
+}
+
+/* INIT */
+window.onload = () => {
+    createParticles();
+    startCrowSystem();
+    generate();
+    idInput.addEventListener('input', updateLog);
+};
+</script>
+
+</body>
+</html>
