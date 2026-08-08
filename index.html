@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genjutsu System ULTIMATE PRO - Senya Instrumental Edition</title>
+<title>Genjutsu System ULTIMATE PRO - Auto Pause/Resume Edition</title>
 
 <!-- GOOGLE FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -502,11 +502,6 @@ input::placeholder {
     <div class="status-indicator" id="status-dot"></div>
 </div>
 
-<!-- AUDIO ELEMENT (Multi-Source Mirroring) -->
-<audio id="itachi-bgm" loop preload="auto">
-    <source src="https://raw.githubusercontent.com/anars/blank-audio/master/250-milliseconds-of-silence.mp3" type="audio/mpeg">
-</audio>
-
 <canvas id="rain-canvas"></canvas>
 <div id="lightning-flash"></div>
 <div id="particle-container"></div>
@@ -572,11 +567,11 @@ const statusDot = document.getElementById('status-dot');
 const musicTitleText = document.getElementById('music-title-text');
 
 let isAudioPlaying = false;
+let userWantsAudio = true; // Status pilihan audio manual pengguna
 let audioCtx = null;
 let synthTimer = null;
 
 /* ================= WEB AUDIO SYNTHESIZER (SENYA MELODY ENGINE) ================= */
-// Nada Asli Melodi "Senya - Itachi Uchiha Theme"
 const notes = {
     'E3': 164.81, 'G3': 196.00, 'A3': 220.00, 'B3': 246.94, 
     'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 
@@ -608,7 +603,7 @@ function initAudioContext() {
 function playTone(freq, time, duration) {
     if(!audioCtx || !isAudioPlaying) return;
 
-    // Koto / Flute Main Synth
+    // Main Koto/Flute Synth
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
 
@@ -625,7 +620,7 @@ function playTone(freq, time, duration) {
     osc.start(time);
     osc.stop(time + duration + 0.4);
 
-    // Warm Atmospheric Bass Pad
+    // Deep Atmospheric Pad
     const padOsc = audioCtx.createOscillator();
     const padGain = audioCtx.createGain();
     padOsc.type = 'sine';
@@ -657,29 +652,65 @@ function playSenyaLoop() {
 
 function startAudioEngine() {
     initAudioContext();
+    if(audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
     isAudioPlaying = true;
     toggleBtn.innerText = '🔊';
     statusDot.classList.add('active');
     musicTitleText.innerText = 'SENYA - PLAYING';
-    noteIdx = 0;
-    playSenyaLoop();
+    if(!synthTimer) {
+        noteIdx = 0;
+        playSenyaLoop();
+    }
 }
 
-function stopAudioEngine() {
+function stopAudioEngine(manualClick = false) {
     isAudioPlaying = false;
-    if(synthTimer) clearTimeout(synthTimer);
+    if(synthTimer) {
+        clearTimeout(synthTimer);
+        synthTimer = null;
+    }
+    if(audioCtx) {
+        audioCtx.suspend();
+    }
     toggleBtn.innerText = '🔇';
     statusDot.classList.remove('active');
-    musicTitleText.innerText = 'SENYA - MUTED';
+    musicTitleText.innerText = manualClick ? 'SENYA - MUTED' : 'SENYA - PAUSED (ALT-TAB)';
 }
 
 function toggleAudio() {
     if (isAudioPlaying) {
-        stopAudioEngine();
+        userWantsAudio = false;
+        stopAudioEngine(true);
     } else {
+        userWantsAudio = true;
         startAudioEngine();
     }
 }
+
+/* ================= AUTO PAUSE ON TAB SWITCH / ALT+TAB ================= */
+function handleVisibilityChange() {
+    if (document.hidden || !document.hasFocus()) {
+        // Otomatis Matikan Audio Saat Alt+Tab / Tab Tidak Aktif
+        if (isAudioPlaying) {
+            stopAudioEngine(false);
+        }
+    } else {
+        // Otomatis Hidupkan Kembali Saat Dashboard Kembali Dibuka
+        if (userWantsAudio && !isAudioPlaying) {
+            startAudioEngine();
+        }
+    }
+}
+
+document.addEventListener('visibilitychange', handleVisibilityChange);
+window.addEventListener('blur', () => {
+    if (isAudioPlaying) stopAudioEngine(false);
+});
+window.addEventListener('focus', () => {
+    if (userWantsAudio && !isAudioPlaying) startAudioEngine();
+});
 
 /* SFX - SHARINGAN */
 function playSharinganSFX() {
@@ -820,7 +851,7 @@ function generate() {
 
 /* TRIGGER EFEK SHARINGAN & TEBASAN PEDANG & PETIR */
 function triggerGenjutsuEffects() {
-    if (!isAudioPlaying) startAudioEngine();
+    if (!isAudioPlaying && userWantsAudio) startAudioEngine();
     playSharinganSFX();
 
     triggerLightning();
@@ -910,7 +941,7 @@ window.onload = () => {
 
     // Otomatis aktifkan audio pada klik/sentuhan pertama di layar
     const enableAudioOnFirstTouch = () => {
-        if(!isAudioPlaying) {
+        if(!isAudioPlaying && userWantsAudio && !document.hidden) {
             startAudioEngine();
         }
         document.removeEventListener('click', enableAudioOnFirstTouch);
