@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genjutsu System ULTIMATE PRO</title>
 
-<!-- GOOGLE FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
@@ -27,16 +26,20 @@ body {
     overflow: hidden;
     position: relative;
     background-color: #05050a;
-    background-image: url("https://cdn.areabermain.club/assets/cdn/azdev/2026/08/07/20260807/95be0a17e69a2505b62f1c0ee08c29a3/60ef8de6-dc9e-41d9-a0da-0194e2746088.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    animation: bgMove 20s ease-in-out infinite alternate;
 }
 
-@keyframes bgMove {
-    0% { transform: scale(1) rotate(0deg); }
-    100% { transform: scale(1.05) rotate(0.5deg); }
+/* BACKGROUND VIDEO */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
 }
 
 /* CYBER OVERLAY GRID */
@@ -435,13 +438,16 @@ input::placeholder {
 
 <body>
 
+<video autoplay loop muted playsinline id="bg-video">
+    <source src="https://v1.pinimg.com/videos/iht/720p/d5/f8/f6/d5f8f68ef0dbff75dd3409f654a9c2d9.mp4" type="video/mp4">
+</video>
+
 <canvas id="rain-canvas"></canvas>
 <div id="lightning-flash"></div>
 <div id="particle-container"></div>
 <div id="crow-container"></div>
 <div id="sword-slash-container"><div id="sword-slash" class="sword-slash"></div></div>
 
-<!-- SHARINGAN EYE VECTOR OVERLAY -->
 <svg id="sharingan-overlay" viewBox="0 0 200 200">
     <circle cx="100" cy="100" r="90" fill="#ff0055" stroke="#000" stroke-width="6"/>
     <circle cx="100" cy="100" r="70" fill="none" stroke="#000" stroke-width="3" opacity="0.6"/>
@@ -453,7 +459,6 @@ input::placeholder {
     </g>
 </svg>
 
-<!-- ANIMATED RGB COLORFUL CONTAINER -->
 <div class="amaterasu-container">
     <div class="card">
         <div class="badge-tag">Mangekyou System</div>
@@ -482,7 +487,6 @@ input::placeholder {
     </div>
 </div>
 
-<!-- COPYRIGHT TEXT FOOTER -->
 <div class="copyright-footer">© Hak Cipta Rifaldo NSt</div>
 
 <script>
